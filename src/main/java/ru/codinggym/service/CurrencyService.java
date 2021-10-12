@@ -1,27 +1,27 @@
 package ru.codinggym.service;
 
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@RequiredArgsConstructor
 public class CurrencyService {
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${exchange.api_secret}")
     private String apiSecret;
 
-    public String getLatestCurrency(String currency) {
-        String url = "http://api.exchangeratesapi.io/v1/latest?access_key=" + apiSecret + "&symbols=" + currency;
+    public String getLatestCurrency() {
+        String url = "http://api.exchangeratesapi.io/v1/latest?access_key=" + apiSecret + "&symbols=RUB";
         String forObject = restTemplate.getForObject(url, String.class);
-        return getInfoFromJson(forObject, currency);
+        return getInfoFromJson(forObject);
     }
 
-    private String getInfoFromJson(String json, String currency) {
+    private String getInfoFromJson(String json) {
         JSONObject jsonObject = new JSONObject(json);
-        return String.valueOf(jsonObject.getJSONObject("rates").getFloat(currency));
+        return String.valueOf(jsonObject.getJSONObject("rates").getFloat("RUB"));
     }
 }

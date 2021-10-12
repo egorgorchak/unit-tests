@@ -1,6 +1,6 @@
 package ru.codinggym.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,23 +8,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.codinggym.model.User;
-import ru.codinggym.service.UserService;
+import ru.codinggym.repositories.UserRepository;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/users/save")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsersFromDB(), HttpStatus.OK);
+        return new ResponseEntity<>((List<User>) userRepository.findAll(), HttpStatus.OK);
     }
 }
