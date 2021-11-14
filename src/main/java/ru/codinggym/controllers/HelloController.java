@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-public class MainController {
+public class HelloController {
     private final GreetingsService greetingsService;
     private final UserRepository userRepository;
 
