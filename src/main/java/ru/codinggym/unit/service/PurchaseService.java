@@ -1,4 +1,4 @@
-package ru.codinggym.service;
+package ru.codinggym.unit.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,9 +8,7 @@ import ru.codinggym.model.User;
 import ru.codinggym.repositories.PurchaseRepository;
 import ru.codinggym.repositories.UserRepository;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,35 +32,39 @@ public class PurchaseService {
         return "The most popular category is: " + calculatePurchaseCategory(getAllPurchasesFromDB());
     }
 
-    public String getMostPopularPurchaseCategoryByUser(Long userId) {
+    public String getMostPopularPurchaseCategoryByUser(String lastName) {
         PurchaseCategory mostPopularCategory = calculatePurchaseCategory(getAllPurchasesFromDB().stream()
-                .filter(el -> Objects.equals(el.getUser().getUserId(), userId))
+                .filter(el -> Objects.equals(el.getUser().getLastName(), lastName))
                 .collect(Collectors.toList())
         );
-        return getUserName(userId) + " most popular category is:" + mostPopularCategory;
+        return lastName + " most popular category is: " + mostPopularCategory;
     }
 
-    public String getSumOfPurchases(Long userId) {
-        Double purchaseSumByUserId = purchaseRepository.getPurchaseSumByUserId(userId);
+    public String getSumOfPurchases(String lastName) {
+        Double purchaseSumByUserId = purchaseRepository.getPurchaseSumByUserLastName(lastName);
         if (purchaseSumByUserId == null) {
             purchaseSumByUserId = 0d;
         }
         Double latestCurrency = Double.parseDouble(currencyService.getLatestCurrency());
-        return getUserName(userId) + " sum of purchases " + purchaseSumByUserId * latestCurrency;
-    }
-
-    private String getUserName(Long userId) {
-        User user = userRepository.findById(userId).get();
-        return user.getFirstName() + " " + user.getLastName();
+        return lastName + " sum of purchases " + purchaseSumByUserId * latestCurrency;
     }
 
     private PurchaseCategory calculatePurchaseCategory(List<Purchase> allPurchasesFromDB) {
-        return allPurchasesFromDB.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet()
+        Map<PurchaseCategory, Integer> integerPurchaseCategoryHashMap = new HashMap<>();
+        for (Purchase purchase : allPurchasesFromDB) {
+            PurchaseCategory category = purchase.getCategory();
+            if (integerPurchaseCategoryHashMap.containsKey(category)) {
+                Integer integer = integerPurchaseCategoryHashMap.get(category) + 1;
+                integerPurchaseCategoryHashMap.put(category, integer);
+            } else {
+                integerPurchaseCategoryHashMap.put(category, 1);
+            }
+        }
+        return integerPurchaseCategoryHashMap.entrySet()
                 .stream()
-                .max((el1, el2) -> (int) (el1.getValue() - el2.getValue()))
-                .map(el -> el.getKey().getCategory())
-                .orElseThrow(() -> new RuntimeException("There is now such thing!"));
+                .max(Comparator.comparingInt(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .get();
     }
 
 }

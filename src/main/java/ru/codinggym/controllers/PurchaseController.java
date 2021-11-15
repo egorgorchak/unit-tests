@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codinggym.model.Purchase;
-import ru.codinggym.service.PurchaseService;
+import ru.codinggym.unit.service.PurchaseService;
 
 import java.util.List;
 
@@ -30,13 +30,13 @@ public class PurchaseController {
         return new ResponseEntity<>(purchaseService.getMostPopularPurchaseCategory(), HttpStatus.OK);
     }
 
-    @GetMapping("/popular/{userId}")
-    public ResponseEntity<String> mostPopularCategoryByUserId(@PathVariable String userId) {
-        return new ResponseEntity<>(purchaseService.getMostPopularPurchaseCategoryByUser(Long.parseLong(userId)), HttpStatus.OK);
+    @GetMapping("/popular/{lastName}")
+    public ResponseEntity<String> mostPopularCategoryByUserId(@PathVariable String lastName) {
+        return new ResponseEntity<>(purchaseService.getMostPopularPurchaseCategoryByUser(lastName), HttpStatus.OK);
     }
 
-    @GetMapping("/sum/{userId}")
-    public ResponseEntity<String> sumOfPurchases(@PathVariable String userId) {
-        return new ResponseEntity<>(purchaseService.getSumOfPurchases(Long.parseLong(userId)), HttpStatus.OK);
+    @GetMapping("/sum/{lastName}")
+    public ResponseEntity<String> sumOfPurchases(@PathVariable String lastName) {
+        return new ResponseEntity<>(purchaseService.getSumOfPurchases(lastName), HttpStatus.OK);
     }
 }

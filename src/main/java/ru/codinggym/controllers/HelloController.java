@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.codinggym.model.User;
 import ru.codinggym.repositories.UserRepository;
-import ru.codinggym.service.GreetingsService;
+import ru.codinggym.unit.service.GreetingsService;
 
 import java.util.Optional;
 

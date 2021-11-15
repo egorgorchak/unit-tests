@@ -33,4 +33,11 @@ public class Purchase {
 
     @Column(name = "purchase_sum")
     private Double purchaseSum;
+
+    public Purchase(User user, PurchaseCategory category, String content, Double purchaseSum) {
+        this.user = user;
+        this.category = category;
+        this.content = content;
+        this.purchaseSum = purchaseSum;
+    }
 }

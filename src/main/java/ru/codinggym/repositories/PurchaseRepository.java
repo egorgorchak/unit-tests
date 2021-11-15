@@ -6,6 +6,6 @@ import ru.codinggym.model.Purchase;
 
 public interface PurchaseRepository extends CrudRepository<Purchase, Long> {
 
-    @Query(value = "SELECT SUM(purchase_sum) from purchase where user_id = ?1", nativeQuery = true)
-    Double getPurchaseSumByUserId(Long userId);
+    @Query(value = "SELECT SUM(purchase_sum) FROM purchase JOIN person ON purchase.user_id = person.user_id WHERE last_name = ?1", nativeQuery = true)
+    Double getPurchaseSumByUserLastName(String lastName);
 }

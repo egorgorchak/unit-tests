@@ -29,4 +29,10 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @JsonManagedReference
     private List<Purchase> userPurchases;
+
+    public User(String firstName, String lastName, List<Purchase> userPurchases) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userPurchases = userPurchases;
+    }
 }

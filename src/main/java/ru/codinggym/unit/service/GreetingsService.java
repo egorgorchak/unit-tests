@@ -1,4 +1,4 @@
-package ru.codinggym.service;
+package ru.codinggym.unit.service;
 
 import org.springframework.stereotype.Service;
 import ru.codinggym.model.User;
